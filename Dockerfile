@@ -1,22 +1,26 @@
-FROM php:8.2-apache
+FROM php:8.2-fpm
 
-# تثبيت Composer وامتدادات PHP المطلوبة
+# تثبيت المكتبات المطلوبة
 RUN apt-get update && apt-get install -y \
-    git zip unzip libpq-dev libonig-dev libxml2-dev \
-    && docker-php-ext-install pdo pdo_pgsql mbstring xml
+    git curl zip unzip libpng-dev libonig-dev libxml2-dev \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
 # تثبيت Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 
-# نسخ ملفات المشروع
-COPY . /var/www/html
-
-# إعدادات Laravel
 WORKDIR /var/www/html
-RUN composer install --no-dev --optimize-autoloader
-RUN php artisan config:cache
-RUN php artisan route:cache
-RUN php artisan migrate --force
 
-EXPOSE 80
-CMD ["php", "-S", "0.0.0.0:80", "-t", "public"]
+COPY . .
+
+# تثبيت مكتبات PHP
+RUN composer install --no-dev --optimize-autoloader
+
+# تثبيت Node وبناء الواجهة
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && npm install && npm run build
+
+# Render لازم يشتغل على بورت 10000
+EXPOSE 10000
+
+CMD php artisan serve --host=0.0.0.0 --port=10000
