@@ -17,6 +17,9 @@
   <!-- CSS & JS عبر Vite -->
   @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
+  <!-- ملف التنسيقات اليدوي -->
+  <link rel="stylesheet" href="{{ asset('assets/css/styles.css') }}">
+
   <!-- Swiper CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
 
