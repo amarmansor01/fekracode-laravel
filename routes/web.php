@@ -28,19 +28,9 @@ use App\Http\Controllers\Admin\UserController;
 
 Auth::routes();
 
-Route::get('/services', function () {
-    return view('services.index');
+Route::get('/test', function () {
+    return 'Laravel is working!';
 });
-Route::get('/', [ServiceController::class, 'index'])->name('home');
-Route::get('/services/{id}', [ServiceController::class, 'show'])->name('services.show');
-Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
-Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
-
-Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
-Route::get('/notifications/{id}', [App\Http\Controllers\NotificationController::class, 'read'])->name('notifications.read');
-// routes/web.php
-Route::view('/about', 'about')->name('about');
 
 
 
