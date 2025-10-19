@@ -2,8 +2,8 @@ FROM php:8.2-cli
 
 # تثبيت المكتبات المطلوبة
 RUN apt-get update && apt-get install -y \
-    git curl zip unzip libpng-dev libonig-dev libxml2-dev \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+    git curl zip unzip libpng-dev libonig-dev libxml2-dev libpq-dev \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd pdo_pgsql pgsql
 
 # تثبيت Composer
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
