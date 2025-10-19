@@ -17,12 +17,7 @@ COPY . .
 # تثبيت مكتبات PHP
 RUN composer install --no-dev --optimize-autoloader
 
-# تثبيت Node.js وبناء الواجهة (Vite)
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs \
-    && npm ci \
-    && npm run build \
-    && rm -rf node_modules
+RUN npm ci && npm run build
 
 # إعطاء صلاحيات للمجلدات
 RUN chmod -R 775 storage bootstrap/cache
