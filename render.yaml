@@ -1,11 +1,10 @@
-# تعديل بسيط لإجبار Git على المزامنة
 services:
   - type: web
     name: fekracode-laravel
     env: docker
     plan: free
     region: singapore
-    dockerfilePath: demo-app/Dockerfile
+    dockerfilePath: /Dockerfile
     repo: https://github.com/amarmansor01/fekracode-laravel
     branch: main
     buildFilter:
