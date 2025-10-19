@@ -32,7 +32,7 @@ Route::get('/services', function () {
     return view('services.index');
 });
 Route::get('/', [ServiceController::class, 'index'])->name('home');
-Route::get('/services/{id}', [ServiceController::class, 'show'])->name('services.show');
+Route::get('/services/{id}', [ServiceController::class, 'show'])->name('service');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');

@@ -60,7 +60,7 @@
               <h3>{{ $service->name }}</h3>
               <p>{{ Str::limit($service->description, 80) }}</p>
               <p><strong>{{ $service->price }}$</strong></p>
-              <a href="{{ route('services.show', $service->id) }}" class="fc-btn-primary">تفاصيل الخدمة</a>
+              <a href="{{ route('service', $service->id) }}" class="fc-btn-primary">تفاصيل الخدمة</a>
             </div>
           </div>
         @endforeach

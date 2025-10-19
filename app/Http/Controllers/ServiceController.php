@@ -31,6 +31,6 @@ class ServiceController extends Controller
         $service = Service::findOrFail($id);
 
         // تمريرها للواجهة services/show.blade.php
-        return view('services.show', compact('service'));
+        return view('services', compact('service'));
     }
 }
