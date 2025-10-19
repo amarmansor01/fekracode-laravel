@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:8.2-cli
 
 # تثبيت المكتبات المطلوبة
 RUN apt-get update && apt-get install -y \
@@ -24,7 +24,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
 # إعطاء صلاحيات للمجلدات
 RUN chmod -R 775 storage bootstrap/cache
 
-# Render لازم يشتغل على بورت 10000
+# Render يمرر البورت عبر متغير PORT
 EXPOSE 10000
 
 # استدعاء سكربت التشغيل
