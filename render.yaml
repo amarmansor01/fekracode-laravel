@@ -1,3 +1,4 @@
+# تعديل بسيط لإجبار Git على المزامنة
 services:
   - type: web
     name: fekracode-laravel
