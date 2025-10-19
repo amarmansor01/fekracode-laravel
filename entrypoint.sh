@@ -11,3 +11,7 @@ php artisan migrate --force
 
 # تشغيل السيرفر على Render (البورت 10000)
 php artisan serve --host=0.0.0.0 --port=10000
+
+
+php artisan config:clear
+php artisan cache:clear
