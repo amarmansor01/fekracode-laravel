@@ -1,9 +1,10 @@
 FROM php:8.2-cli
 
-# تثبيت المكتبات المطلوبة
+# تثبيت المكتبات المطلوبة + دعم PostgreSQL
 RUN apt-get update && apt-get install -y \
     git curl zip unzip libpng-dev libonig-dev libxml2-dev libpq-dev \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd pdo_pgsql pgsql
+    && docker-php-ext-install -j$(nproc) mbstring exif pcntl bcmath gd \
+    && docker-php-ext-install -j$(nproc) pdo_pgsql pgsql
 
 # تثبيت Composer
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
