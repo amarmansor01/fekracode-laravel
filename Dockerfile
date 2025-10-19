@@ -6,6 +6,11 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install -j$(nproc) mbstring exif pcntl bcmath gd \
     && docker-php-ext-install -j$(nproc) pdo_pgsql pgsql
 
+
+RUN apt-get update && apt-get install -y libpq-dev \
+    && docker-php-ext-install pdo_pgsql pgsql
+
+
 # تثبيت Composer
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 
