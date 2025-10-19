@@ -34,7 +34,7 @@ Route::get('/services', function () {
 Route::get('/', [ServiceController::class, 'index'])->name('home');
 Route::get('/services/{id}', [ServiceController::class, 'show'])->name('service');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+Route::get('/products/{id}', [ProductController::class, 'show'])->name('product');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
