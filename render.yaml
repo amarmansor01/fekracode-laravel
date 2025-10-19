@@ -3,10 +3,8 @@ services:
     name: fekracode-laravel
     env: docker
     plan: free
-    region: singapore
-    dockerfilePath: /Dockerfile
+    region: frankfurt
+    dockerfilePath: Dockerfile
     repo: https://github.com/amarmansor01/fekracode-laravel
     branch: main
-    buildFilter:
-      paths:
-        - demo-app/**
+    numInstances: 1
