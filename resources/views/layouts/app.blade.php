@@ -15,7 +15,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 
   <!-- CSS & JS عبر Vite -->
-  @vite(['resources/css/app.css', 'resources/js/app.js'])
+  @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
   <!-- Swiper CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
