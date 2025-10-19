@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: fekracode-laravel
+    env: docker
+    plan: free
+    region: singapore
+    dockerfilePath: demo-app/Dockerfile
+    repo: amarmansor01/fekracode-laravel
+    branch: main
+    buildFilter:
+      paths:
+        - demo-app/**
