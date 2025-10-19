@@ -5,7 +5,7 @@ services:
     plan: free
     region: singapore
     dockerfilePath: demo-app/Dockerfile
-    repo: amarmansor01/fekracode-laravel
+    repo: https://github.com/amarmansor01/fekracode-laravel
     branch: main
     buildFilter:
       paths:
