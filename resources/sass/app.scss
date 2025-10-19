@@ -1,10 +1,7 @@
-// Fonts
-@import url('https://fonts.bunny.net/css?family=Nunito');
+// لازم @use يجي أول شي
+@use "sass:math";
+@use "variables" as *;
+@use "bootstrap" as *;
 
-// Variables
-@import 'variables';
-
-// Bootstrap
-@import 'bootstrap/scss/bootstrap';
-
-
+// Fonts (مسموح يجي بعدين)
+@import url("https://fonts.bunny.net/css?family=Nunito");
