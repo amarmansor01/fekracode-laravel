@@ -28,6 +28,9 @@ use App\Http\Controllers\Admin\UserController;
 
 Auth::routes();
 
+
+
+
 Route::get('/services', function () {
     return view('services.index');
 });
