@@ -1,8 +1,5 @@
 FROM php:8.2-cli
 
-RUN composer require cloudinary-labs/cloudinary-laravel
-
-
 # تثبيت المكتبات المطلوبة + دعم PostgreSQL
 RUN apt-get update && apt-get install -y \
     git curl zip unzip libpng-dev libonig-dev libxml2-dev libpq-dev \
