@@ -11,12 +11,11 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Cloudinary Configuration
+    | Cloudinary Notification URL
     |--------------------------------------------------------------------------
     |
-    | An HTTP or HTTPS URL to notify your application (a webhook) when the process of uploads, deletes, and any API
-    | that accepts notification_url has completed.
-    |
+    | An HTTP or HTTPS URL to notify your application (a webhook) when the process
+    | of uploads, deletes, and any API that accepts notification_url has completed.
     |
     */
     'notification_url' => env('CLOUDINARY_NOTIFICATION_URL'),
@@ -26,12 +25,23 @@ return [
     | Cloudinary Configuration
     |--------------------------------------------------------------------------
     |
-    | Here you may configure your Cloudinary settings. Cloudinary is a cloud hosted
-    | media management service for all file uploads, storage, delivery and transformation needs.
-    |
+    | You can configure Cloudinary either by providing a full CLOUDINARY_URL
+    | or by setting the individual environment variables:
+    | CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET
     |
     */
-    'cloud_url' => env('CLOUDINARY_URL', 'cloudinary://'.env('CLOUDINARY_KEY').':'.env('CLOUDINARY_SECRET').'@'.env('CLOUDINARY_CLOUD_NAME')),
+    'cloud_url' => env('CLOUDINARY_URL', sprintf(
+        'cloudinary://%s:%s@%s',
+        env('CLOUDINARY_API_KEY'),
+        env('CLOUDINARY_API_SECRET'),
+        env('CLOUDINARY_CLOUD_NAME')
+    )),
+
+    'cloud' => [
+        'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+        'api_key'    => env('CLOUDINARY_API_KEY'),
+        'api_secret' => env('CLOUDINARY_API_SECRET'),
+    ],
 
     /**
      * Upload Preset From Cloudinary Dashboard
