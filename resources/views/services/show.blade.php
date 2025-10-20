@@ -4,26 +4,23 @@
 <section class="fc-section">
   <div class="fc-container">
     <h2 data-aos="fade-up">{{ $service->name }}</h2>
-    @php
-      use Illuminate\Support\Facades\Storage;
-      // جرب الحقل media أولاً ثم image كاحتياط
-      $filename = $service->media ?? $service->image ?? null;
-      $filename = $filename ? ltrim($filename, '/') : null;
-      $diskPath = $filename ? 'services/' . $filename : null;
 
-      // Force URL using APP_URL (config('app.url')) to match server host/port
-      $appUrl = rtrim(config('app.url') ?? env('APP_URL') ?? '', '/');
-      $forcedUrl = $filename ? ($appUrl . '/storage/services/' . $filename) : null;
-    @endphp
-
-    @if($filename)
-      @if($diskPath && Storage::disk('public')->exists($diskPath))
-        <img src="{{ $forcedUrl }}" alt="{{ $service->name }}" style="max-width:400px; border-radius:8px;" data-aos="zoom-in" data-aos-delay="100">
-      @elseif(file_exists(public_path('storage/services/' . $filename)))
-        <img src="{{ $forcedUrl }}" alt="{{ $service->name }}" style="max-width:400px; border-radius:8px;" data-aos="zoom-in" data-aos-delay="100">
+    {{-- عرض الوسائط: صورة أو فيديو من Cloudinary --}}
+    @if($service->image)
+      @php
+        $url = $service->image;
+        $ext = strtolower(pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
+      @endphp
+      @if(in_array($ext, ['mp4','webm','ogg']))
+        <video controls style="max-width:400px; border-radius:8px; margin-bottom:15px;" data-aos="zoom-in" data-aos-delay="100">
+          <source src="{{ $url }}">
+          متصفحك لا يدعم تشغيل الفيديو
+        </video>
       @else
-        <img src="{{ asset('assets/img/placeholder-service.png') }}" alt="لا توجد صورة" style="max-width:400px; border-radius:8px;" data-aos="zoom-in" data-aos-delay="100">
+        <img src="{{ $url }}" alt="{{ $service->name }}" style="max-width:400px; border-radius:8px;" data-aos="zoom-in" data-aos-delay="100">
       @endif
+    @else
+      <img src="{{ asset('assets/img/placeholder-service.png') }}" alt="لا توجد صورة" style="max-width:400px; border-radius:8px;" data-aos="zoom-in" data-aos-delay="100">
     @endif
 
     <p data-aos="fade-up" data-aos-delay="150">{{ $service->description }}</p>

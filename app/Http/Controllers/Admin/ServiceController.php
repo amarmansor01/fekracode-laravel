@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Service;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class ServiceController extends Controller
 {
@@ -18,25 +19,29 @@ class ServiceController extends Controller
     {
         return view('admin.services.create');
 
-        // إشعار لكل العملاء
-       $clients = \App\Models\User::where('role','client')->get();
-       foreach ($clients as $client) {
-       $client->notify(new \App\Notifications\NewProductNotification($product));
-      }
+        // إشعار لكل العملاء (الكود الأصلي كما هو)
+        $clients = \App\Models\User::where('role','client')->get();
+        foreach ($clients as $client) {
+            $client->notify(new \App\Notifications\NewProductNotification($product));
+        }
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name'        => 'required|string|max:255',
             'description' => 'required|string',
-            'price' => 'required|numeric',
-            'image' => 'nullable|file|mimes:jpg,jpeg,png,mp4|max:20480'
+            'price'       => 'required|numeric',
+            'image'       => 'nullable|file|mimes:jpg,jpeg,png,mp4|max:20480'
         ]);
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('services', 'public');
-            $validated['image'] = basename($path);
+            // رفع الملف إلى Cloudinary
+            $upload = Cloudinary::upload(
+                $request->file('image')->getRealPath(),
+                ['folder' => 'services']
+            );
+            $validated['image'] = $upload->getSecurePath();
         }
 
         Service::create($validated);
@@ -51,15 +56,18 @@ class ServiceController extends Controller
     public function update(Request $request, Service $service)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name'        => 'required|string|max:255',
             'description' => 'required|string',
-            'price' => 'required|numeric',
-            'image' => 'nullable|file|mimes:jpg,jpeg,png,mp4|max:20480'
+            'price'       => 'required|numeric',
+            'image'       => 'nullable|file|mimes:jpg,jpeg,png,mp4|max:20480'
         ]);
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('services', 'public');
-            $validated['image'] = basename($path);
+            $upload = Cloudinary::upload(
+                $request->file('image')->getRealPath(),
+                ['folder' => 'services']
+            );
+            $validated['image'] = $upload->getSecurePath();
         }
 
         $service->update($validated);

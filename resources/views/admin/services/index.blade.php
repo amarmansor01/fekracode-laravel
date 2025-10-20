@@ -26,11 +26,15 @@
           <td>{{ Str::limit($service->description, 50) }}</td>
           <td>{{ $service->price }}$</td>
           <td>
-            @if($service->media)
-              @if(Str::endsWith($service->media, '.mp4'))
-                <video width="100" controls src="{{ asset('storage/' . $service->media) }}"></video>
+            @if($service->image)
+              @php
+                $url = $service->image;
+                $ext = strtolower(pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
+              @endphp
+              @if(in_array($ext, ['mp4','webm','ogg']))
+                <video width="100" controls src="{{ $url }}"></video>
               @else
-                <img width="100" src="{{ asset('storage/' . $service->media) }}" />
+                <img width="100" src="{{ $url }}" alt="{{ $service->name }}" />
               @endif
             @endif
           </td>

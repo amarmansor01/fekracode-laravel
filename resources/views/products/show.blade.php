@@ -5,17 +5,21 @@
   <div class="fc-container">
     <h2 data-aos="fade-up">{{ $product->name }}</h2>
 
-    {{-- عرض الوسائط: صورة أو فيديو --}}
+    {{-- عرض الوسائط: صورة أو فيديو من Cloudinary --}}
     @if($product->image)
-      @if(Str::endsWith($product->image, '.mp4'))
+      @php
+        $url = $product->image;
+        $ext = strtolower(pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
+      @endphp
+      @if(in_array($ext, ['mp4','webm','ogg']))
         <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; max-width:100%; border-radius:8px; margin-bottom:15px;" data-aos="zoom-in">
           <video controls style="position:absolute; top:0; left:0; width:100%; height:100%; border-radius:8px;">
-            <source src="{{ asset('storage/' . $product->image) }}" type="video/mp4">
+            <source src="{{ $url }}">
             متصفحك لا يدعم تشغيل الفيديو
           </video>
         </div>
       @else
-        <img src="{{ asset('storage/' . $product->image) }}" 
+        <img src="{{ $url }}" 
              alt="{{ $product->name }}" 
              style="max-width:100%; height:auto; border-radius:8px; margin-bottom:15px;"
              data-aos="zoom-in" data-aos-delay="100">

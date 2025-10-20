@@ -25,10 +25,14 @@
           <td>{{ Str::limit($product->description, 50) }}</td>
           <td>
             @if($product->image)
-              @if(Str::endsWith($product->image, '.mp4'))
-                <video width="100" controls src="{{ asset('storage/' . $product->image) }}"></video>
+              @php
+                $url = $product->image;
+                $ext = strtolower(pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
+              @endphp
+              @if(in_array($ext, ['mp4','webm','ogg']))
+                <video width="100" controls src="{{ $url }}"></video>
               @else
-                <img width="100" src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" />
+                <img width="100" src="{{ $url }}" alt="{{ $product->name }}" />
               @endif
             @endif
           </td>

@@ -29,7 +29,6 @@
 
 @php
   use Illuminate\Support\Str;
-  use Illuminate\Support\Facades\Storage;
 @endphp
 
 <section id="services" class="fc-section">
@@ -39,21 +38,25 @@
       <div class="swiper-wrapper">
         @foreach($services as $service)
           @php
-            $stored = $service->media ?? $service->image ?? null;
-            $path = $stored ? (Str::startsWith($stored, 'services/') ? $stored : 'services/' . ltrim($stored, '/')) : null;
-
-            if ($path && Storage::disk('public')->exists($path)) {
-              $imgUrl = Storage::disk('public')->url($path);
-            } elseif ($stored && file_exists(public_path('storage/services/' . basename($stored)))) {
-              $imgUrl = asset('storage/services/' . basename($stored));
-            } else {
-              $imgUrl = asset('assets/img/placeholder-service.png');
-            }
+            $url = $service->image ?? null;
+            $ext = $url ? strtolower(pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION)) : null;
+            $isVideo = in_array($ext, ['mp4','webm','ogg']);
           @endphp
 
           <div class="swiper-slide fc-card" data-aos="zoom-in" data-aos-delay="150">
             <div class="fc-card-media">
-              <img src="{{ $imgUrl }}" alt="{{ $service->name }}" class="fc-thumb" />
+              @if($url)
+                @if($isVideo)
+                  <video width="100%" controls>
+                    <source src="{{ $url }}" type="video/{{ $ext }}">
+                    متصفحك لا يدعم عرض الفيديو
+                  </video>
+                @else
+                  <img src="{{ $url }}" alt="{{ $service->name }}" class="fc-thumb" />
+                @endif
+              @else
+                <img src="{{ asset('assets/img/placeholder-service.png') }}" alt="لا توجد وسائط" class="fc-thumb" />
+              @endif
             </div>
 
             <div class="fc-card-body">
@@ -76,26 +79,23 @@
     <div class="fc-grid">
       @foreach($products as $product)
         @php
-          $file = $product->image ?? null;
-          $relative = $file ? (Str::startsWith($file, 'products/') ? $file : 'products/' . ltrim($file, '/')) : null;
-          $existsOnDisk = $relative ? Storage::disk('public')->exists($relative) : false;
-          $mediaUrl = $existsOnDisk ? Storage::disk('public')->url($relative) : asset('assets/img/placeholder-service.png');
-          $ext = $file ? strtolower(pathinfo($file, PATHINFO_EXTENSION)) : null;
+          $url = $product->image ?? null;
+          $ext = $url ? strtolower(pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION)) : null;
           $isImage = in_array($ext, ['jpg','jpeg','png','gif','webp']);
           $isVideo = in_array($ext, ['mp4','webm','ogg']);
         @endphp
 
         <div class="fc-card project-card" data-aos="fade-up" data-aos-delay="100">
           <div class="project-media">
-            @if($existsOnDisk && $isImage)
-              <img src="{{ $mediaUrl }}" alt="{{ $product->name }}">
-            @elseif($existsOnDisk && $isVideo)
+            @if($url && $isImage)
+              <img src="{{ $url }}" alt="{{ $product->name }}">
+            @elseif($url && $isVideo)
               <video controls preload="metadata">
-                <source src="{{ $mediaUrl }}" type="video/{{ $ext }}">
+                <source src="{{ $url }}" type="video/{{ $ext }}">
                 متصفحك لا يدعم عرض الفيديو
               </video>
             @else
-              <img src="{{ $mediaUrl }}" alt="لا توجد وسائط">
+              <img src="{{ asset('assets/img/placeholder-service.png') }}" alt="لا توجد وسائط">
             @endif
           </div>
 
