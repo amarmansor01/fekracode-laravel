@@ -102,7 +102,7 @@
           <div class="project-body">
             <h3>{{ $product->name }}</h3>
             <p>{{ Str::limit($product->description, 100) }}</p>
-            <a href="{{ route('products.show', $product->id) }}" class="fc-btn-primary">تفاصيل</a>
+            <a href="{{ route('product', $product->id) }}" class="fc-btn-primary">تفاصيل</a>
           </div>
         </div>
       @endforeach
