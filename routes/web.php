@@ -29,6 +29,7 @@ use App\Http\Controllers\Admin\UserController;
 Auth::routes();
 
 
+Route::get('/debug-cloud', fn() => config('cloudinary.cloud_url'));
 
 
 Route::get('/services', function () {
