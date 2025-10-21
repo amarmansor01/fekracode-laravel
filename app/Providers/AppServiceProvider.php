@@ -23,5 +23,12 @@ class AppServiceProvider extends ServiceProvider
         if (config('app.env') === 'production') {
             URL::forceScheme('https');
         }
+
+        \Log::info('Cloudinary Config', [
+        'CLOUD_NAME' => env('CLOUDINARY_CLOUD_NAME'),
+        'API_KEY'    => env('CLOUDINARY_API_KEY'),
+        'API_SECRET' => env('CLOUDINARY_API_SECRET') ? '*** موجودة ***' : '❌ فارغة',
+        ]);
+
     }
 }
