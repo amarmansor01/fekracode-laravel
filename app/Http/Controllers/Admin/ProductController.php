@@ -5,10 +5,26 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use Cloudinary\Api\Upload\UploadApi;
+use Cloudinary\Configuration\Configuration;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        // تهيئة Cloudinary مرة وحدة عند إنشاء الكنترولر
+        Configuration::instance([
+            'cloud' => [
+                'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+                'api_key'    => env('CLOUDINARY_API_KEY'),
+                'api_secret' => env('CLOUDINARY_API_SECRET'),
+            ],
+            'url' => [
+                'secure' => true
+            ]
+        ]);
+    }
+
     /**
      * عرض جميع المشاريع السابقة
      */
@@ -38,12 +54,22 @@ class ProductController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            // رفع الملف إلى Cloudinary (صور أو فيديو)
-            $upload = Cloudinary::uploadFile(
-                $request->file('image')->getRealPath(),
-                ['folder' => 'products']
-            );
-            $validated['image'] = $upload->getSecurePath();
+            try {
+                $upload = (new UploadApi())->upload(
+                    $request->file('image')->getRealPath(),
+                    [
+                        'folder' => 'products',
+                        'resource_type' => 'auto', // يدعم صور وفيديو
+                    ]
+                );
+                $validated['image'] = $upload['secure_url'];
+            } catch (\Exception $e) {
+                \Log::error('Cloudinary Upload Error (store)', [
+                    'message' => $e->getMessage(),
+                    'trace'   => $e->getTraceAsString(),
+                ]);
+                dd($e->getMessage());
+            }
         }
 
         Product::create($validated);
@@ -73,11 +99,22 @@ class ProductController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $upload = Cloudinary::uploadFile(
-                $request->file('image')->getRealPath(),
-                ['folder' => 'products']
-            );
-            $validated['image'] = $upload->getSecurePath();
+            try {
+                $upload = (new UploadApi())->upload(
+                    $request->file('image')->getRealPath(),
+                    [
+                        'folder' => 'products',
+                        'resource_type' => 'auto',
+                    ]
+                );
+                $validated['image'] = $upload['secure_url'];
+            } catch (\Exception $e) {
+                \Log::error('Cloudinary Upload Error (update)', [
+                    'message' => $e->getMessage(),
+                    'trace'   => $e->getTraceAsString(),
+                ]);
+                dd($e->getMessage());
+            }
         }
 
         $product->update($validated);

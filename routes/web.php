@@ -28,16 +28,6 @@ use App\Http\Controllers\Admin\UserController;
 
 Auth::routes();
 
-Route::get('/debug-cloud-full', function () {
-    return [
-        'cloud_url'   => config('cloudinary.cloud_url'),
-        'cloud_name'  => config('cloudinary.cloud.cloud_name'),
-        'api_key'     => config('cloudinary.cloud.api_key'),
-        'api_secret'  => config('cloudinary.cloud.api_secret') ? '*** موجودة ***' : null,
-        'upload_preset' => config('cloudinary.upload_preset'),
-    ];
-});
-
 
 Route::get('/services', function () {
     return view('services.index');
