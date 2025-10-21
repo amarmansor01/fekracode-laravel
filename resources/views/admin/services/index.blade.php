@@ -31,18 +31,27 @@
                 $url = $service->image;
                 $ext = strtolower(pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
               @endphp
-              @if(in_array($ext, ['mp4','webm','ogg']))
-                <video width="100" controls src="{{ $url }}"></video>
-              @else
-                <img width="100" src="{{ $url }}" alt="{{ $service->name }}" />
-              @endif
+              <div style="margin-top:5px;">
+                @if(in_array($ext, ['mp4','webm','ogg']))
+                  <video width="120" controls>
+                    <source src="{{ $url }}" type="video/{{ $ext }}">
+                    متصفحك لا يدعم تشغيل الفيديو
+                  </video>
+                @else
+                  <img width="120" src="{{ $url }}" alt="{{ $service->name }}">
+                @endif
+              </div>
+            @else
+              <div style="margin-top:5px;">
+                <img width="120" src="{{ asset('assets/img/placeholder-service.png') }}" alt="لا توجد وسائط">
+              </div>
             @endif
           </td>
           <td>
-            <a href="{{ route('services.edit', $service->id) }}">تعديل</a>
+            <a href="{{ route('services.edit', $service->id) }}" class="fc-btn-secondary">تعديل</a>
             <form method="POST" action="{{ route('services.destroy', $service->id) }}" style="display:inline;">
               @csrf @method('DELETE')
-              <button type="submit" onclick="return confirm('هل أنت متأكد؟')">حذف</button>
+              <button type="submit" class="fc-btn-danger" onclick="return confirm('هل أنت متأكد من الحذف؟')">حذف</button>
             </form>
           </td>
         </tr>

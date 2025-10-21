@@ -11,19 +11,27 @@
         $url = $product->image;
         $ext = strtolower(pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
       @endphp
-      @if(in_array($ext, ['mp4','webm','ogg']))
-        <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; max-width:100%; border-radius:8px; margin-bottom:15px;" data-aos="zoom-in">
-          <video controls style="position:absolute; top:0; left:0; width:100%; height:100%; border-radius:8px;">
-            <source src="{{ $url }}">
-            متصفحك لا يدعم تشغيل الفيديو
-          </video>
-        </div>
-      @else
-        <img src="{{ $url }}" 
-             alt="{{ $product->name }}" 
-             style="max-width:100%; height:auto; border-radius:8px; margin-bottom:15px;"
-             data-aos="zoom-in" data-aos-delay="100">
-      @endif
+
+      <div style="margin:15px 0;" data-aos="zoom-in" data-aos-delay="100">
+        @if(in_array($ext, ['mp4','webm','ogg']))
+          <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; max-width:100%; border-radius:8px;">
+            <video controls style="position:absolute; top:0; left:0; width:100%; height:100%; border-radius:8px;">
+              <source src="{{ $url }}" type="video/{{ $ext }}">
+              متصفحك لا يدعم تشغيل الفيديو
+            </video>
+          </div>
+        @else
+          <img src="{{ $url }}" 
+               alt="{{ $product->name }}" 
+               style="max-width:100%; height:auto; border-radius:8px; margin-bottom:15px;">
+        @endif
+      </div>
+    @else
+      <div style="margin:15px 0;" data-aos="zoom-in" data-aos-delay="100">
+        <img src="{{ asset('assets/img/placeholder-service.png') }}" 
+             alt="لا توجد وسائط" 
+             style="max-width:100%; height:auto; border-radius:8px; margin-bottom:15px;">
+      </div>
     @endif
 
     {{-- الوصف --}}
@@ -61,10 +69,14 @@
           <button type="submit" class="fc-btn-primary">اطلب مشروع مشابه</button>
         </form>
       @else
-        <p class="fc-alert error" data-aos="fade-up" data-aos-delay="550">فقط العملاء يمكنهم إرسال طلبات. الرجاء تسجيل الدخول كعميل.</p>
+        <p class="fc-alert error" data-aos="fade-up" data-aos-delay="550">
+          فقط العملاء يمكنهم إرسال طلبات. الرجاء تسجيل الدخول كعميل.
+        </p>
       @endif
     @else
-      <p class="fc-alert error" data-aos="fade-up" data-aos-delay="550">الرجاء تسجيل الدخول كعميل لإرسال طلب.</p>
+      <p class="fc-alert error" data-aos="fade-up" data-aos-delay="550">
+        الرجاء تسجيل الدخول كعميل لإرسال طلب.
+      </p>
     @endauth
 
   </div>

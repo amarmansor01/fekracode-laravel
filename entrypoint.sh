@@ -14,7 +14,7 @@ php artisan storage:link || true
 php artisan migrate --force
 php artisan db:seed --force
 
-# (اختياري) إعادة بناء الكاش بعد ما Render مرّر env
+# إعادة بناء الكاش بعد تمرير env
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache

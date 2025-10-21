@@ -34,12 +34,12 @@ class ProductController extends Controller
         $validated = $request->validate([
             'name'        => 'required|string|max:255',
             'description' => 'required|string',
-            'image'       => 'nullable|file|mimes:jpg,jpeg,png,mp4|max:20480',
+            'image'       => 'nullable|file|mimes:jpg,jpeg,png,webp,gif,mp4,webm,ogg|max:20480',
         ]);
 
         if ($request->hasFile('image')) {
-            // رفع الملف إلى Cloudinary
-            $upload = Cloudinary::upload(
+            // رفع الملف إلى Cloudinary (صور أو فيديو)
+            $upload = Cloudinary::uploadFile(
                 $request->file('image')->getRealPath(),
                 ['folder' => 'products']
             );
@@ -69,11 +69,11 @@ class ProductController extends Controller
         $validated = $request->validate([
             'name'        => 'required|string|max:255',
             'description' => 'required|string',
-            'image'       => 'nullable|file|mimes:jpg,jpeg,png,mp4|max:20480',
+            'image'       => 'nullable|file|mimes:jpg,jpeg,png,webp,gif,mp4,webm,ogg|max:20480',
         ]);
 
         if ($request->hasFile('image')) {
-            $upload = Cloudinary::upload(
+            $upload = Cloudinary::uploadFile(
                 $request->file('image')->getRealPath(),
                 ['folder' => 'products']
             );

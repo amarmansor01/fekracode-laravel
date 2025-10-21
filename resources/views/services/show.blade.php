@@ -11,20 +11,27 @@
         $url = $service->image;
         $ext = strtolower(pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
       @endphp
-      @if(in_array($ext, ['mp4','webm','ogg']))
-        <video controls style="max-width:400px; border-radius:8px; margin-bottom:15px;" data-aos="zoom-in" data-aos-delay="100">
-          <source src="{{ $url }}">
-          متصفحك لا يدعم تشغيل الفيديو
-        </video>
-      @else
-        <img src="{{ $url }}" alt="{{ $service->name }}" style="max-width:400px; border-radius:8px;" data-aos="zoom-in" data-aos-delay="100">
-      @endif
+
+      <div style="margin:15px 0;" data-aos="zoom-in" data-aos-delay="100">
+        @if(in_array($ext, ['mp4','webm','ogg']))
+          <video controls style="max-width:400px; border-radius:8px;">
+            <source src="{{ $url }}" type="video/{{ $ext }}">
+            متصفحك لا يدعم تشغيل الفيديو
+          </video>
+        @else
+          <img src="{{ $url }}" alt="{{ $service->name }}" style="max-width:400px; border-radius:8px;">
+        @endif
+      </div>
     @else
-      <img src="{{ asset('assets/img/placeholder-service.png') }}" alt="لا توجد صورة" style="max-width:400px; border-radius:8px;" data-aos="zoom-in" data-aos-delay="100">
+      <div style="margin:15px 0;" data-aos="zoom-in" data-aos-delay="100">
+        <img src="{{ asset('assets/img/placeholder-service.png') }}" alt="لا توجد وسائط" style="max-width:400px; border-radius:8px;">
+      </div>
     @endif
 
     <p data-aos="fade-up" data-aos-delay="150">{{ $service->description }}</p>
-    <p class="price" data-aos="fade-up" data-aos-delay="200">السعر الابتدائي: <strong>{{ $service->price }}$</strong></p>
+    <p class="price" data-aos="fade-up" data-aos-delay="200">
+      السعر الابتدائي: <strong>{{ $service->price }}$</strong>
+    </p>
 
     <h3 data-aos="fade-up" data-aos-delay="250">اطلب هذه الخدمة</h3>
 
@@ -42,10 +49,14 @@
           <button type="submit" class="fc-btn-primary" data-aos="zoom-in" data-aos-delay="400">إرسال الطلب</button>
         </form>
       @else
-        <p class="fc-alert error" data-aos="fade-up" data-aos-delay="300">فقط العملاء يمكنهم إرسال طلبات. الرجاء تسجيل الدخول كعميل.</p>
+        <p class="fc-alert error" data-aos="fade-up" data-aos-delay="300">
+          فقط العملاء يمكنهم إرسال طلبات. الرجاء تسجيل الدخول كعميل.
+        </p>
       @endif
     @else
-      <p class="fc-alert error" data-aos="fade-up" data-aos-delay="300">الرجاء تسجيل الدخول كعميل لإرسال طلب.</p>
+      <p class="fc-alert error" data-aos="fade-up" data-aos-delay="300">
+        الرجاء تسجيل الدخول كعميل لإرسال طلب.
+      </p>
     @endauth
 
   </div>

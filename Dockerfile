@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
 # تثبيت Composer
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 
-# تثبيت Node.js (قبل أي npm command)
+# تثبيت Node.js
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs
 
@@ -27,8 +27,10 @@ RUN npm ci && npm run build && rm -rf node_modules
 # إعطاء صلاحيات للمجلدات
 RUN chmod -R 775 storage bootstrap/cache
 
-# Render يمرر البورت عبر متغير PORT
+# نسخ سكربت التشغيل
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 EXPOSE 10000
 
-# استدعاء سكربت التشغيل
-CMD ["sh", "entrypoint.sh"]
+CMD ["/entrypoint.sh"]

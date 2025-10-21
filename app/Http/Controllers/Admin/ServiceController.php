@@ -18,12 +18,6 @@ class ServiceController extends Controller
     public function create()
     {
         return view('admin.services.create');
-
-        // إشعار لكل العملاء (الكود الأصلي كما هو)
-        $clients = \App\Models\User::where('role','client')->get();
-        foreach ($clients as $client) {
-            $client->notify(new \App\Notifications\NewProductNotification($product));
-        }
     }
 
     public function store(Request $request)
@@ -32,12 +26,12 @@ class ServiceController extends Controller
             'name'        => 'required|string|max:255',
             'description' => 'required|string',
             'price'       => 'required|numeric',
-            'image'       => 'nullable|file|mimes:jpg,jpeg,png,mp4|max:20480'
+            'image'       => 'nullable|file|mimes:jpg,jpeg,png,webp,gif,mp4,webm,ogg|max:20480'
         ]);
 
         if ($request->hasFile('image')) {
-            // رفع الملف إلى Cloudinary
-            $upload = Cloudinary::upload(
+            // رفع الملف إلى Cloudinary (صور أو فيديو)
+            $upload = Cloudinary::uploadFile(
                 $request->file('image')->getRealPath(),
                 ['folder' => 'services']
             );
@@ -45,6 +39,7 @@ class ServiceController extends Controller
         }
 
         Service::create($validated);
+
         return redirect()->route('services.index')->with('success', 'تمت إضافة الخدمة بنجاح');
     }
 
@@ -59,11 +54,11 @@ class ServiceController extends Controller
             'name'        => 'required|string|max:255',
             'description' => 'required|string',
             'price'       => 'required|numeric',
-            'image'       => 'nullable|file|mimes:jpg,jpeg,png,mp4|max:20480'
+            'image'       => 'nullable|file|mimes:jpg,jpeg,png,webp,gif,mp4,webm,ogg|max:20480'
         ]);
 
         if ($request->hasFile('image')) {
-            $upload = Cloudinary::upload(
+            $upload = Cloudinary::uploadFile(
                 $request->file('image')->getRealPath(),
                 ['folder' => 'services']
             );
@@ -71,6 +66,7 @@ class ServiceController extends Controller
         }
 
         $service->update($validated);
+
         return redirect()->route('services.index')->with('success', 'تم تعديل الخدمة');
     }
 

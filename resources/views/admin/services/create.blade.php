@@ -26,16 +26,27 @@
     <div class="fc-field">
       <label>صورة أو فيديو</label>
       <input type="file" name="image" />
+
       @if(isset($service) && $service->image)
         @php
           $url = $service->image;
           $ext = strtolower(pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
         @endphp
-        @if(in_array($ext, ['mp4','webm','ogg']))
-          <video width="200" controls src="{{ $url }}"></video>
-        @else
-          <img width="200" src="{{ $url }}" alt="{{ $service->name }}">
-        @endif
+
+        <div style="margin-top:10px;">
+          @if(in_array($ext, ['mp4','webm','ogg']))
+            <video width="250" controls>
+              <source src="{{ $url }}" type="video/{{ $ext }}">
+              متصفحك لا يدعم تشغيل الفيديو
+            </video>
+          @else
+            <img width="250" src="{{ $url }}" alt="{{ $service->name }}">
+          @endif
+        </div>
+      @else
+        <div style="margin-top:10px;">
+          <img width="250" src="{{ asset('assets/img/placeholder-service.png') }}" alt="لا توجد وسائط">
+        </div>
       @endif
     </div>
 
