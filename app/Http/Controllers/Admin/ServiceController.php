@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Service;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use Cloudinary\Api\Upload\UploadApi; // استدعاء الكلاس الجديد
 
 class ServiceController extends Controller
 {
@@ -30,12 +30,19 @@ class ServiceController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            // رفع الملف إلى Cloudinary (صور أو فيديو)
-            $upload = Cloudinary::uploadFile(
-                $request->file('image')->getRealPath(),
-                ['folder' => 'services']
-            );
-            $validated['image'] = $upload->getSecurePath();
+            try {
+                $upload = (new UploadApi())->upload(
+                    $request->file('image')->getRealPath(),
+                    ['folder' => 'services']
+                );
+                $validated['image'] = $upload['secure_url'];
+            } catch (\Exception $e) {
+                \Log::error('Cloudinary Upload Error', [
+                    'message' => $e->getMessage(),
+                    'trace'   => $e->getTraceAsString(),
+                ]);
+                dd($e->getMessage());
+            }
         }
 
         Service::create($validated);
@@ -58,22 +65,25 @@ class ServiceController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-    try {
-        $upload = Cloudinary::uploadFile(
-            $request->file('image')->getRealPath(),
-            ['folder' => 'services']
-        );
-        $validated['image'] = $upload->getSecurePath();
-    } catch (\Exception $e) {
-        \Log::error('Cloudinary Upload Error', [
-            'message' => $e->getMessage(),
-            'trace'   => $e->getTraceAsString(),
-        ]);
-        dd($e->getMessage()); // يطبع الخطأ الحقيقي على الصفحة
-    }
-  }
-}
+            try {
+                $upload = (new UploadApi())->upload(
+                    $request->file('image')->getRealPath(),
+                    ['folder' => 'services']
+                );
+                $validated['image'] = $upload['secure_url'];
+            } catch (\Exception $e) {
+                \Log::error('Cloudinary Upload Error', [
+                    'message' => $e->getMessage(),
+                    'trace'   => $e->getTraceAsString(),
+                ]);
+                dd($e->getMessage());
+            }
+        }
 
+        $service->update($validated);
+
+        return redirect()->route('services.index')->with('success', 'تم تعديل الخدمة بنجاح');
+    }
 
     public function destroy(Service $service)
     {
