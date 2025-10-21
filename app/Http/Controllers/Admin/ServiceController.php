@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Service;
-use Cloudinary\Api\Upload\UploadApi; // استدعاء الكلاس الجديد
+use Cloudinary\Api\Upload\UploadApi;
 
 class ServiceController extends Controller
 {
@@ -31,16 +31,24 @@ class ServiceController extends Controller
 
         if ($request->hasFile('image')) {
             try {
-                $upload = (new UploadApi())->unsignedUpload(
+                $upload = (new UploadApi())->upload(
                     $request->file('image')->getRealPath(),
-                    env('CLOUDINARY_UPLOAD_PRESET'), // اسم الـ preset من .env
-                    ['folder' => 'services']
+                    [
+                        'folder' => 'services',
+                        // تقدر تضيف خيارات هون مثل: public_id، overwrite، resource_type (auto)
+                        'resource_type' => 'auto',
+                    ]
                 );
                 $validated['image'] = $upload['secure_url'];
             } catch (\Exception $e) {
-                \Log::error('Cloudinary Upload Error', [
+                \Log::error('Cloudinary Upload Error (store)', [
                     'message' => $e->getMessage(),
                     'trace'   => $e->getTraceAsString(),
+                    'env'     => [
+                        'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+                        'api_key'    => env('CLOUDINARY_API_KEY'),
+                        'api_secret' => env('CLOUDINARY_API_SECRET') ? 'SET' : 'MISSING',
+                    ],
                 ]);
                 dd($e->getMessage());
             }
@@ -67,16 +75,23 @@ class ServiceController extends Controller
 
         if ($request->hasFile('image')) {
             try {
-                $upload = (new UploadApi())->unsignedUpload(
+                $upload = (new UploadApi())->upload(
                     $request->file('image')->getRealPath(),
-                    env('CLOUDINARY_UPLOAD_PRESET'),
-                    ['folder' => 'services']
+                    [
+                        'folder' => 'services',
+                        'resource_type' => 'auto',
+                    ]
                 );
                 $validated['image'] = $upload['secure_url'];
             } catch (\Exception $e) {
-                \Log::error('Cloudinary Upload Error', [
+                \Log::error('Cloudinary Upload Error (update)', [
                     'message' => $e->getMessage(),
                     'trace'   => $e->getTraceAsString(),
+                    'env'     => [
+                        'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+                        'api_key'    => env('CLOUDINARY_API_KEY'),
+                        'api_secret' => env('CLOUDINARY_API_SECRET') ? 'SET' : 'MISSING',
+                    ],
                 ]);
                 dd($e->getMessage());
             }
