@@ -31,8 +31,9 @@ class ServiceController extends Controller
 
         if ($request->hasFile('image')) {
             try {
-                $upload = (new UploadApi())->upload(
+                $upload = (new UploadApi())->unsignedUpload(
                     $request->file('image')->getRealPath(),
+                    env('CLOUDINARY_UPLOAD_PRESET'), // اسم الـ preset من .env
                     ['folder' => 'services']
                 );
                 $validated['image'] = $upload['secure_url'];
@@ -66,8 +67,9 @@ class ServiceController extends Controller
 
         if ($request->hasFile('image')) {
             try {
-                $upload = (new UploadApi())->upload(
+                $upload = (new UploadApi())->unsignedUpload(
                     $request->file('image')->getRealPath(),
+                    env('CLOUDINARY_UPLOAD_PRESET'),
                     ['folder' => 'services']
                 );
                 $validated['image'] = $upload['secure_url'];
