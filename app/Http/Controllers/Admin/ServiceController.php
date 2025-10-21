@@ -10,6 +10,21 @@ use Cloudinary\Configuration\Configuration;
 
 class ServiceController extends Controller
 {
+    public function __construct()
+    {
+        // تهيئة Cloudinary مرة وحدة عند إنشاء الكنترولر
+        Configuration::instance([
+            'cloud' => [
+                'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+                'api_key'    => env('CLOUDINARY_API_KEY'),
+                'api_secret' => env('CLOUDINARY_API_SECRET'),
+            ],
+            'url' => [
+                'secure' => true
+            ]
+        ]);
+    }
+
     public function index()
     {
         $services = Service::latest()->get();
@@ -36,8 +51,7 @@ class ServiceController extends Controller
                     $request->file('image')->getRealPath(),
                     [
                         'folder' => 'services',
-                        // تقدر تضيف خيارات هون مثل: public_id، overwrite، resource_type (auto)
-                        'resource_type' => 'auto',
+                        'resource_type' => 'auto', // يدعم صور وفيديو
                     ]
                 );
                 $validated['image'] = $upload['secure_url'];
@@ -45,11 +59,6 @@ class ServiceController extends Controller
                 \Log::error('Cloudinary Upload Error (store)', [
                     'message' => $e->getMessage(),
                     'trace'   => $e->getTraceAsString(),
-                    'env'     => [
-                        'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                        'api_key'    => env('CLOUDINARY_API_KEY'),
-                        'api_secret' => env('CLOUDINARY_API_SECRET') ? 'SET' : 'MISSING',
-                    ],
                 ]);
                 dd($e->getMessage());
             }
@@ -88,11 +97,6 @@ class ServiceController extends Controller
                 \Log::error('Cloudinary Upload Error (update)', [
                     'message' => $e->getMessage(),
                     'trace'   => $e->getTraceAsString(),
-                    'env'     => [
-                        'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                        'api_key'    => env('CLOUDINARY_API_KEY'),
-                        'api_secret' => env('CLOUDINARY_API_SECRET') ? 'SET' : 'MISSING',
-                    ],
                 ]);
                 dd($e->getMessage());
             }
