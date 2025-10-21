@@ -58,17 +58,22 @@ class ServiceController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $upload = Cloudinary::uploadFile(
-                $request->file('image')->getRealPath(),
-                ['folder' => 'services']
-            );
-            $validated['image'] = $upload->getSecurePath();
-        }
-
-        $service->update($validated);
-
-        return redirect()->route('services.index')->with('success', 'تم تعديل الخدمة');
+    try {
+        $upload = Cloudinary::uploadFile(
+            $request->file('image')->getRealPath(),
+            ['folder' => 'services']
+        );
+        $validated['image'] = $upload->getSecurePath();
+    } catch (\Exception $e) {
+        \Log::error('Cloudinary Upload Error', [
+            'message' => $e->getMessage(),
+            'trace'   => $e->getTraceAsString(),
+        ]);
+        dd($e->getMessage()); // يطبع الخطأ الحقيقي على الصفحة
     }
+  }
+}
+
 
     public function destroy(Service $service)
     {
